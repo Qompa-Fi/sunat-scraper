@@ -1,0 +1,22 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "linter": {
+    "ignore": ["node_modules", ".expo", "android"],
+    "rules": {
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "suspicious": {
+        "noRedeclare": "off"
+      }
+    }
+  },
+  "formatter": {
+    "ignore": ["node_modules", ".expo", "android"],
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "organizeImports": {
+    "enabled": false
+  }
+}
