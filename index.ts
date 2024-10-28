@@ -1,4 +1,5 @@
 import { parse as parseHtml, type HTMLElement } from "node-html-parser";
+
 import type { CompanyInfo, CompanyLegalRepresentative } from "./types";
 
 type SunatQueryAction = "consPorRuc" | "getRepLeg";
