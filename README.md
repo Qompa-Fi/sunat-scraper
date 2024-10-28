@@ -1,4 +1,4 @@
-# sunat-scrapper
+# sunat-scraper
 
 To install dependencies:
 
