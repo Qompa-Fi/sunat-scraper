@@ -13,7 +13,7 @@ const SUNAT_WEBVIEW_URL =
 export const getLegalRepresentatives = async (
   ruc: string,
 ): Promise<CompanyLegalRepresentative[] | null> => {
-  const document = await queryByRuc(ruc, "getRepLeg");
+  const document = await queryByRuc(ruc, "getRepLeg"); //
 
   const tds = document.querySelectorAll(".panel .table td");
   const results: Array<CompanyLegalRepresentative> = [];
