@@ -46,6 +46,7 @@ export const getCompanyInfo = async (
   const document = await queryByRuc(ruc);
 
   const tds = document.querySelectorAll(".form-table tr td");
+  if (tds.length < 27) return null;
 
   const [rucNumber, name] = tds[2].innerText.split(" - ");
   const taxPayerType = tds[4].innerText;
