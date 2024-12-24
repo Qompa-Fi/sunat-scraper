@@ -134,7 +134,7 @@ const parseAsLocalizedDateOrNull = (
 export const verifySolCredentials = async (
   ruc: string,
   solUsername: string,
-  solPassword: string,
+  solKey: string,
 ): Promise<boolean> => {
   const oauth2Endpoint = await getOauth2EndpointUrl();
   if (!oauth2Endpoint) return false;
@@ -164,7 +164,7 @@ export const verifySolCredentials = async (
       dni: "",
       custom_ruc: ruc,
       j_username: solUsername,
-      j_password: solPassword,
+      j_password: solKey,
       captcha: "",
       state,
       originalUrl: "",
