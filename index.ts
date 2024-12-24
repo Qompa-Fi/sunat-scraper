@@ -130,3 +130,85 @@ const parseAsLocalizedDateOrNull = (
   const d = new Date(`${year}-${month}-${day}T00:00:00${tzOffset}`);
   return Number.isNaN(d.getTime()) ? null : d;
 };
+
+export const verifySolCredentials = async (
+  ruc: string,
+  solUsername: string,
+  solPassword: string,
+): Promise<boolean> => {
+  const oauth2Endpoint = await getOauth2EndpointUrl();
+  if (!oauth2Endpoint) return false;
+
+  const structuredOauth2Endpoint = new URL(oauth2Endpoint);
+
+  const state = structuredOauth2Endpoint.searchParams.get("state") ?? "";
+
+  structuredOauth2Endpoint.search = "";
+  const urlWithoutParams = structuredOauth2Endpoint.toString();
+  const trimmedEndpoint = urlWithoutParams.substring(
+    0,
+    urlWithoutParams.lastIndexOf("/"),
+  );
+
+  const response = await fetch(`${trimmedEndpoint}/j_security_check`, {
+    method: "POST",
+    headers: {
+      Accept: "text/html",
+      Origin: "https://api-seguridad.sunat.gob.pe",
+      Referer: "https://e-menu.sunat.gob.pe/",
+      DNT: "1",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      tipo: "2",
+      dni: "",
+      custom_ruc: ruc,
+      j_username: solUsername,
+      j_password: solPassword,
+      captcha: "",
+      state,
+      originalUrl: "",
+    }),
+    redirect: "follow",
+  });
+
+  const document = await response.text();
+  const isValid = document.includes("Bienvenidos a SUNAT");
+
+  return isValid;
+};
+
+async function getOauth2EndpointUrl(): Promise<string | null> {
+  const response = await fetch(
+    "https://e-menu.sunat.gob.pe/cl-ti-itmenu/MenuInternet.htm",
+    {
+      credentials: "include",
+      headers: {
+        Accept: "text/html",
+        "Accept-Language": "en-US,en;q=0.5",
+        Origin: "https://api-seguridad.sunat.gob.pe",
+        Referer: "https://e-menu.sunat.gob.pe/",
+        "User-Agent":
+          "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0",
+        DNT: "1",
+      },
+    },
+  );
+
+  const body = await response.text();
+
+  // https://stackoverflow.com/a/6041965 :)
+  const rxUrlWithParams =
+    /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/;
+
+  const matches = body.match(rxUrlWithParams);
+  if (matches) {
+    for (const match of matches) {
+      if (match.includes("https://api-seguridad.sunat.gob.pe/v1/clientessol")) {
+        return match;
+      }
+    }
+  }
+
+  return null;
+}
