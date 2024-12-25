@@ -131,6 +131,22 @@ const parseAsLocalizedDateOrNull = (
   return Number.isNaN(d.getTime()) ? null : d;
 };
 
+const getOauth2EndpointMetadata = (endpoint: string): [string, string] => {
+  const structuredOauth2Endpoint = new URL(endpoint);
+  const state = structuredOauth2Endpoint.searchParams.get("state") ?? "";
+
+  structuredOauth2Endpoint.search = "";
+
+  const completeUrl = structuredOauth2Endpoint.toString();
+
+  const trimmedEndpoint = completeUrl.substring(
+    0,
+    completeUrl.lastIndexOf("/"),
+  );
+
+  return [trimmedEndpoint, state];
+};
+
 export const verifySolCredentials = async (
   ruc: string,
   solUsername: string,
@@ -139,16 +155,7 @@ export const verifySolCredentials = async (
   const oauth2Endpoint = await getOauth2EndpointUrl();
   if (!oauth2Endpoint) return false;
 
-  const structuredOauth2Endpoint = new URL(oauth2Endpoint);
-
-  const state = structuredOauth2Endpoint.searchParams.get("state") ?? "";
-
-  structuredOauth2Endpoint.search = "";
-  const urlWithoutParams = structuredOauth2Endpoint.toString();
-  const trimmedEndpoint = urlWithoutParams.substring(
-    0,
-    urlWithoutParams.lastIndexOf("/"),
-  );
+  const [trimmedEndpoint, state] = getOauth2EndpointMetadata(oauth2Endpoint);
 
   const response = await fetch(`${trimmedEndpoint}/j_security_check`, {
     method: "POST",
