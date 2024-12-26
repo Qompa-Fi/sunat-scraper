@@ -219,3 +219,86 @@ async function getOauth2EndpointUrl(): Promise<string | null> {
 
   return null;
 }
+
+type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+interface RawExchangeRate {
+  fecPublica: string;
+  valTipo: string;
+  codTipo: RawExchangeRateType;
+}
+
+type RawExchangeRateType = "C" | "V";
+
+interface ExchangeRate {
+  date: string;
+  salePrice: string;
+  purchasePrice: string;
+}
+
+export async function getRawExchangeRatesOfMonth(
+  month: Month,
+  year: number,
+): Promise<RawExchangeRate[] | null> {
+  const endpoint =
+    "https://e-consulta.sunat.gob.pe/cl-at-ittipcam/tcS01Alias/listarTipoCambio";
+
+  const userAgent =
+    "Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0";
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "User-Agent": userAgent,
+      Accept: "application/json",
+      "Accept-Language": "en-US,en;q=0.5",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Requested-With": "XMLHttpRequest",
+      DNT: "1",
+    },
+    body: JSON.stringify({
+      anio: year,
+      mes: month - 1, // yes, months are zero-indexed
+      token: "dont_make_this_difficult",
+    }),
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+export async function getExchangeRatesOfMonth(
+  month: Month,
+  year: number,
+): Promise<ExchangeRate[] | null> {
+  const rawRates = await getRawExchangeRatesOfMonth(month, year);
+  if (!rawRates) return null;
+
+  const results: Array<ExchangeRate> = [];
+  let parsedRate: Partial<ExchangeRate> | null = null;
+
+  for (const rawRate of rawRates) {
+    if (!parsedRate) {
+      parsedRate = { date: rawRate.fecPublica };
+    }
+
+    if (rawRate.codTipo === "C") {
+      parsedRate.salePrice = rawRate.valTipo;
+    } else if (rawRate.codTipo === "V") {
+      parsedRate.purchasePrice = rawRate.valTipo;
+    }
+
+    const isComplete =
+      parsedRate?.date && parsedRate?.purchasePrice && parsedRate?.salePrice;
+
+    if (isComplete) {
+      results.push(parsedRate as ExchangeRate);
+      parsedRate = null;
+    }
+  }
+
+  return results.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+}
