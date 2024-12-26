@@ -220,7 +220,7 @@ async function getOauth2EndpointUrl(): Promise<string | null> {
   return null;
 }
 
-interface RawExchangeRate {
+export interface RawExchangeRate {
   fecPublica: string;
   valTipo: string;
   codTipo: RawExchangeRateType;
@@ -228,7 +228,7 @@ interface RawExchangeRate {
 
 type RawExchangeRateType = "C" | "V";
 
-interface ExchangeRate {
+export interface ExchangeRate {
   date: string;
   salePrice: string;
   purchasePrice: string;
