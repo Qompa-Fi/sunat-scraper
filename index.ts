@@ -220,8 +220,6 @@ async function getOauth2EndpointUrl(): Promise<string | null> {
   return null;
 }
 
-type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-
 interface RawExchangeRate {
   fecPublica: string;
   valTipo: string;
@@ -237,7 +235,7 @@ interface ExchangeRate {
 }
 
 export async function getRawExchangeRatesOfMonth(
-  month: Month,
+  month: number,
   year: number,
 ): Promise<RawExchangeRate[] | null> {
   const endpoint =
@@ -271,7 +269,7 @@ export async function getRawExchangeRatesOfMonth(
 }
 
 export async function getExchangeRatesOfMonth(
-  month: Month,
+  month: number,
   year: number,
 ): Promise<ExchangeRate[] | null> {
   const rawRates = await getRawExchangeRatesOfMonth(month, year);
