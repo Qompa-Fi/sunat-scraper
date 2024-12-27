@@ -288,9 +288,9 @@ export async function getExchangeRatesOfMonth(
     }
 
     if (rawRate.codTipo === "C") {
-      parsedRate.salePrice = rawRate.valTipo;
-    } else if (rawRate.codTipo === "V") {
       parsedRate.purchasePrice = rawRate.valTipo;
+    } else if (rawRate.codTipo === "V") {
+      parsedRate.salePrice = rawRate.valTipo;
     }
 
     const isComplete =
