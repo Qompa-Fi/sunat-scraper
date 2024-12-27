@@ -1,15 +1,13 @@
-# sunat-scraper
+# Sunat scraper
 
-To install dependencies:
+Utilities to fetch information from SUNAT API and SUNAT Platform (through web scraping). We're doing an effort to
+maintain support for both Node.js and Bun runtimes but **Node.js with more priority**.
 
-```bash
-bun install
-```
+## Features
 
-To run:
+- Minimal dependencies
+- TypeScript
 
-```bash
-bun run index.ts
-```
+## LICENSE
 
-This project was created using `bun init` in bun v1.1.29. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+[MIT](./LICENSE)
