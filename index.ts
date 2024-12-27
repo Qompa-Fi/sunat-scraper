@@ -247,11 +247,13 @@ export async function getRawExchangeRatesOfMonth(
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
+      Connection: "keep-alive",
       "User-Agent": userAgent,
-      Accept: "application/json",
+      Accept: "application/json, text/javascript, */*; q=0.01",
       "Accept-Language": "en-US,en;q=0.5",
       "Content-Type": "application/json; charset=utf-8",
       "X-Requested-With": "XMLHttpRequest",
+      "Accept-Encoding": "gzip, deflate, br",
       DNT: "1",
     },
     body: JSON.stringify({
@@ -259,6 +261,8 @@ export async function getRawExchangeRatesOfMonth(
       mes: month - 1, // yes, months are zero-indexed
       token: "dont_make_this_difficult",
     }),
+    credentials: "include",
+    mode: "cors",
   });
 
   if (!response.ok) {
