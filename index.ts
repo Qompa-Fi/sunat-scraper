@@ -234,7 +234,7 @@ export interface ExchangeRate {
   purchasePrice: string;
 }
 
-export async function getRawExchangeRatesOfMonth(
+async function getRawExchangeRatesOfMonth(
   month: number,
   year: number,
 ): Promise<RawExchangeRate[] | null> {
@@ -304,3 +304,5 @@ export async function getExchangeRatesOfMonth(
 
   return results.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
 }
+
+getExchangeRatesOfMonth.raw = getRawExchangeRatesOfMonth;
