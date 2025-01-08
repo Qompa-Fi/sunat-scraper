@@ -1,8 +1,13 @@
 {
-  "name": "sunat-scraper",
+  "name": "@qompa/sunat-scraper",
+  "version": "0.0.1",
   "module": "dist/index.js",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
