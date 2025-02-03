@@ -1,6 +1,7 @@
 import { parse as parseHtml, type HTMLElement } from "node-html-parser";
 
 import type { CompanyInfo, CompanyLegalRepresentative } from "./types.ts";
+import { ProposalsAPI } from "./proposals/index.js";
 
 type SunatQueryAction = "consPorRuc" | "getRepLeg";
 
@@ -306,3 +307,22 @@ export async function getExchangeRatesOfMonth(
 }
 
 getExchangeRatesOfMonth.raw = getRawExchangeRatesOfMonth;
+
+export namespace Proposals {
+  export const queryProcesses = ProposalsAPI.queryProcesses;
+
+  export const taxComplianceVerification = {
+    getSummary: ProposalsAPI.getTaxComplianceVerificationSummary,
+    getPeriods: ProposalsAPI.getTaxComplianceVerificationPeriods,
+  };
+
+  export const purchasingManagement = {
+    requestProposal: ProposalsAPI.requestPurchasingManagementProposal,
+    getProposal: ProposalsAPI.getProcessedIncomesProposal,
+  };
+
+  export const salesAndRevenuesManagement = {
+    requestProposal: ProposalsAPI.requestSalesAndRevenueManagementProposal,
+    getProposal: ProposalsAPI.getProcessedSalesAndRevenuesProposal,
+  };
+}
