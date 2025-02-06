@@ -568,3 +568,8 @@ export interface SalesRecord {
    */
   customs_declaration: string | null;
 }
+
+export enum BookCode {
+  Purchases = "080000",
+  SalesAndRevenue = "140000",
+}

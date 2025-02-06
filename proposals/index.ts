@@ -1,22 +1,9 @@
 import AdmZip from "adm-zip";
 
-import { Result } from "../types.js";
-import type {
-  EntityDocumentTypeCode,
-  InvoiceStatusCode,
-  KnownCurrenciesAndMore,
-  ProofOfPaymentCode,
-  PurchaseRecord,
-  SalesRecord,
-  SaleTypeCode,
-} from "./types.js";
+import * as Types from "./types";
+import { Result } from "../types";
 
-export enum BookCode {
-  Purchases = "080000",
-  SalesAndRevenue = "140000",
-}
-
-export namespace ProposalsAPI {
+namespace ProposalsAPI {
   const genericHeaders: HeadersInit = {
     "User-Agent":
       "Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0",
@@ -38,7 +25,7 @@ export namespace ProposalsAPI {
    */
   export const getTaxComplianceVerificationPeriods = async (
     sunatToken: string,
-    bookCode: BookCode,
+    bookCode: Types.BookCode,
   ): Promise<Result<string[], "bad_response">> => {
     const endpoint = `https://api-sire.sunat.gob.pe/v1/contribuyente/migeigv/libros/rvierce/padron/web/omisos/${bookCode}/periodos`;
 
@@ -118,21 +105,24 @@ export namespace ProposalsAPI {
     totalAmount: number; // Total CP
   }
 
-  type GetTaxComplianceVerificationSummaryDataMapping<B extends BookCode> =
-    B extends "140000"
-      ? PurchasingManagementSummary[]
-      : B extends "080000"
-        ? SalesAndRevenueManagementSummary[]
-        : never;
+  type GetTaxComplianceVerificationSummaryDataMapping<
+    B extends Types.BookCode,
+  > = B extends "140000"
+    ? PurchasingManagementSummary[]
+    : B extends "080000"
+      ? SalesAndRevenueManagementSummary[]
+      : never;
 
   export interface GetTaxComplianceVerificationSummaryInputs<
-    B extends BookCode,
+    B extends Types.BookCode,
   > {
     book_code: B;
     tax_period: string;
   }
 
-  export const getTaxComplianceVerificationSummary = async <B extends BookCode>(
+  export const getTaxComplianceVerificationSummary = async <
+    B extends Types.BookCode,
+  >(
     sunatToken: string,
     inputs: GetTaxComplianceVerificationSummaryInputs<B>,
   ): Promise<
@@ -312,7 +302,7 @@ export namespace ProposalsAPI {
     /**
      * @description The book code to use in the request.
      */
-    book_code: BookCode;
+    book_code: Types.BookCode;
     /**
      * @description A year and month in the following format: YYYYMM. Example: 202401, 202512, 202403, etc.
      */
@@ -567,16 +557,16 @@ export namespace ProposalsAPI {
     sunatToken: string,
     inputs: GetProcessedProposalInputs,
   ): Promise<
-    Result<SalesRecord[], "bad_response" | "could_not_retrieve_csv">
+    Result<Types.SalesRecord[], "bad_response" | "could_not_retrieve_csv">
   > => {
     const result = await getProcessedIGVProposal(
       sunatToken,
-      BookCode.SalesAndRevenue,
+      Types.BookCode.SalesAndRevenue,
       inputs,
     );
     if (!result.ok) return result;
 
-    const results: Array<SalesRecord> = [];
+    const results: Array<Types.SalesRecord> = [];
 
     const [, ...rows] = result.value.split("\n");
 
@@ -593,11 +583,11 @@ export namespace ProposalsAPI {
         car_sunat: columns[3],
         issue_date: columns[4],
         due_date: columns[5] ?? null,
-        document_type: columns[6].padStart(2, "0") as ProofOfPaymentCode,
+        document_type: columns[6].padStart(2, "0") as Types.ProofOfPaymentCode,
         document_series: columns[7],
         initial_document_number: columns[8] ?? null,
         final_document_number: columns[9] ?? null,
-        identity_document_type: columns[10] as EntityDocumentTypeCode,
+        identity_document_type: columns[10] as Types.EntityDocumentTypeCode,
         identity_document_number: columns[11],
         client_name: columns[12],
         export_invoiced_value: Number.parseFloat(columns[13]),
@@ -613,13 +603,13 @@ export namespace ProposalsAPI {
         icbper: Number.parseFloat(columns[23]),
         other_taxes: Number.parseFloat(columns[24]),
         total_amount: Number.parseFloat(columns[25]),
-        currency: columns[26] as KnownCurrenciesAndMore,
+        currency: columns[26] as Types.KnownCurrenciesAndMore,
         exchange_rate: Number.parseFloat(columns[27]),
         note_type: columns[33] ?? null,
-        invoice_status: columns[34] as InvoiceStatusCode,
+        invoice_status: columns[34] as Types.InvoiceStatusCode,
         fob_value: Number.parseFloat(columns[35]),
         free_operations_value: Number.parseFloat(columns[36]),
-        operation_type: columns[37] as SaleTypeCode,
+        operation_type: columns[37] as Types.SaleTypeCode,
         customs_declaration: columns[38] ?? null,
       });
     }
@@ -631,18 +621,18 @@ export namespace ProposalsAPI {
     sunatToken: string,
     inputs: GetProcessedProposalInputs,
   ): Promise<
-    Result<PurchaseRecord[], "bad_response" | "could_not_retrieve_csv">
+    Result<Types.PurchaseRecord[], "bad_response" | "could_not_retrieve_csv">
   > => {
     const result = await getProcessedIGVProposal(
       sunatToken,
-      BookCode.Purchases,
+      Types.BookCode.Purchases,
       inputs,
     );
     if (!result.ok) return result;
 
     const [, ...rows] = result.value.split("\n");
 
-    const results: Array<PurchaseRecord> = [];
+    const results: Array<Types.PurchaseRecord> = [];
 
     for (const row of rows) {
       const columns = row.split(",");
@@ -657,12 +647,12 @@ export namespace ProposalsAPI {
         car_sunat: columns[3],
         issue_date: columns[4],
         due_date: columns[5] ?? null,
-        document_type: columns[6].padStart(2, "0") as ProofOfPaymentCode,
+        document_type: columns[6].padStart(2, "0") as Types.ProofOfPaymentCode,
         document_series: columns[7],
         year: columns[8] ?? null,
         initial_document_number: columns[9] ?? null,
         final_document_number: columns[10] ?? null,
-        identity_document_type: columns[11] as EntityDocumentTypeCode,
+        identity_document_type: columns[11] as Types.EntityDocumentTypeCode,
         identity_document_number: columns[12],
         client_name: columns[13],
         taxable_base_dg: Number.parseFloat(columns[14]),
@@ -676,13 +666,13 @@ export namespace ProposalsAPI {
         icbper: Number.parseFloat(columns[22]),
         other_taxes: Number.parseFloat(columns[23]),
         total_amount: Number.parseFloat(columns[24]),
-        currency: columns[25] as KnownCurrenciesAndMore,
+        currency: columns[25] as Types.KnownCurrenciesAndMore,
         exchange_rate: Number.parseFloat(columns[26]),
         imb: Number.parseFloat(columns[35]),
         origin_indicator: columns[36] ?? null,
         detraction: columns[37] ? Number.parseFloat(columns[37]) : null,
         note_type: columns[38] ?? null,
-        invoice_status: columns[39] as InvoiceStatusCode,
+        invoice_status: columns[39] as Types.InvoiceStatusCode,
         incal: columns[40] ?? null,
       });
     }
@@ -695,7 +685,7 @@ export namespace ProposalsAPI {
    */
   const getProcessedIGVProposal = async (
     sunatToken: string,
-    bookCode: BookCode,
+    bookCode: Types.BookCode,
     inputs: GetProcessedProposalInputs,
   ): Promise<Result<string, "bad_response" | "could_not_retrieve_csv">> => {
     const params = new URLSearchParams({
@@ -736,4 +726,32 @@ export namespace ProposalsAPI {
   };
 }
 
-export * from "./types";
+export namespace Proposals {
+  export const queryProcesses = ProposalsAPI.queryProcesses;
+
+  export const TaxComplianceVerification = {
+    getSummary: ProposalsAPI.getTaxComplianceVerificationSummary,
+    getPeriods: ProposalsAPI.getTaxComplianceVerificationPeriods,
+  };
+
+  export const Purchasing = {
+    requestProposal: ProposalsAPI.requestPurchasingManagementProposal,
+    getProposal: ProposalsAPI.getProcessedIncomesProposal,
+  };
+
+  export const SalesAndRevenues = {
+    requestProposal: ProposalsAPI.requestSalesAndRevenueManagementProposal,
+    getProposal: ProposalsAPI.getProcessedSalesAndRevenuesProposal,
+  };
+
+  export import SalesRecord = Types.SalesRecord;
+  export import PurchaseRecord = Types.PurchaseRecord;
+
+  export const {
+    ProofOfPaymentCode,
+    InvoiceStatusCode,
+    EntityDocumentTypeCode,
+    SaleTypeCode,
+    BookCode,
+  } = Types;
+}
