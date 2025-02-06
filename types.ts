@@ -58,3 +58,5 @@ export namespace Result {
     value: undefined,
   });
 }
+
+export * from "./proposals";

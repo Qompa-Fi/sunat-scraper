@@ -735,3 +735,5 @@ export namespace ProposalsAPI {
     return Result.notok("could_not_retrieve_csv");
   };
 }
+
+export * from "./types";
