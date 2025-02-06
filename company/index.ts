@@ -1,6 +1,6 @@
 import { parse as parseHtml, type HTMLElement } from "node-html-parser";
 
-import * as Types from "./types";
+import * as Types from "./types.js";
 
 type SunatQueryAction = "consPorRuc" | "getRepLeg";
 

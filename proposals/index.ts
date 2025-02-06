@@ -1,7 +1,7 @@
 import AdmZip from "adm-zip";
 
-import * as Types from "./types";
-import { Result } from "../types";
+import * as Types from "./types.js";
+import { Result } from "../types.js";
 
 namespace ProposalsAPI {
   const genericHeaders: HeadersInit = {

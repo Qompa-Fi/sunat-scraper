@@ -174,5 +174,5 @@ export async function getExchangeRatesOfMonth(
 
 getExchangeRatesOfMonth.raw = getRawExchangeRatesOfMonth;
 
-export * from "./proposals";
-export * from "./company";
+export * from "./proposals/index.js";
+export * from "./company/index.js";
