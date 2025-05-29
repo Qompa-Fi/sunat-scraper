@@ -355,6 +355,25 @@ export interface PurchaseRecord {
    * @description Original: "Tipo de Cambio". Example for PEN: 1.000. Index: 26. - Exchange rate applied.
    */
   exchange_rate: number;
+  mod_document: {
+    /**
+     * @description Original: "Fecha Emisión Doc Modificado". - Date of modification of the document.
+     */
+    issue_date: string;
+    /**
+     * @description Original: "Tipo CP Modificado". - Modified document type.
+     */
+    type: ProofOfPaymentCode;
+    /**
+     * @description Original: "Serie CP Modificado". - Modified document series.
+     */
+    series: string;
+    /**
+     * @description Original: "Nro CP Modificado". - Modified document number.
+     */
+    number: string;
+  } | null;
+
   /**
    * @description Original: "IMB". Index: 35. - Tax subject matter of benefit Law 31053.
    */
@@ -543,6 +562,27 @@ export interface SalesRecord {
    * @description Original: "Tipo Cambio". - Exchange rate.
    */
   exchange_rate: number;
+  /**
+   * @description Information about the modified document, null if not applicable.
+   */
+  mod_document: {
+    /**
+     * @description Original: "Fecha Emisión Doc Modificado". - Date of modification of the document.
+     */
+    issue_date: string;
+    /**
+     * @description Original: "Tipo CP Modificado". - Modified document type.
+     */
+    type: ProofOfPaymentCode;
+    /**
+     * @description Original: "Serie CP Modificado". - Modified document series.
+     */
+    series: string;
+    /**
+     * @description Original: "Nro CP Modificado". - Modified document number.
+     */
+    number: string;
+  } | null;
   /**
    * @description Original: "Tipo de Nota". - Note type, null if not applicable.
    */

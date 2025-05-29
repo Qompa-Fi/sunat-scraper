@@ -605,6 +605,15 @@ namespace ProposalsAPI {
         total_amount: Number.parseFloat(columns[25]),
         currency: columns[26] as Types.KnownCurrenciesAndMore,
         exchange_rate: Number.parseFloat(columns[27]),
+        mod_document:
+          columns[28] && columns[29] && columns[30] && columns[31]
+            ? {
+                issue_date: columns[28],
+                type: columns[29] as Types.ProofOfPaymentCode,
+                series: columns[30],
+                number: columns[31],
+              }
+            : null,
         note_type: columns[33] ?? null,
         invoice_status: columns[34] as Types.InvoiceStatusCode,
         fob_value: Number.parseFloat(columns[35]),
@@ -668,6 +677,15 @@ namespace ProposalsAPI {
         total_amount: Number.parseFloat(columns[24]),
         currency: columns[25] as Types.KnownCurrenciesAndMore,
         exchange_rate: Number.parseFloat(columns[26]),
+        mod_document:
+          columns[27] && columns[28] && columns[29] && columns[31]
+            ? {
+                issue_date: columns[27],
+                type: columns[28] as Types.ProofOfPaymentCode,
+                series: columns[29],
+                number: columns[31],
+              }
+            : null,
         imb: Number.parseFloat(columns[35]),
         origin_indicator: columns[36] ?? null,
         detraction: columns[37] ? Number.parseFloat(columns[37]) : null,
