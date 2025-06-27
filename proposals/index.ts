@@ -26,7 +26,7 @@ namespace ProposalsAPI {
   export const getTaxComplianceVerificationPeriods = async (
     sunatToken: string,
     bookCode: Types.BookCode,
-  ): Promise<Result<string[], "bad_response">> => {
+  ): Promise<Result<string[], "unauthorized" | "bad_response">> => {
     const endpoint = `https://api-sire.sunat.gob.pe/v1/contribuyente/migeigv/libros/rvierce/padron/web/omisos/${bookCode}/periodos`;
 
     const response = await fetch(endpoint, {
@@ -42,7 +42,12 @@ namespace ProposalsAPI {
 
     if (!response.ok) {
       const body = await response.text();
+
       console.warn({ body, url: response.url }, "response was not ok");
+
+      if (body.includes("401 Authorization Required")) {
+        return Result.notok("unauthorized");
+      }
 
       return Result.notok("bad_response");
     }
