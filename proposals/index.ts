@@ -166,20 +166,20 @@ namespace ProposalsAPI {
 
         results.push({
           documentType: columns[0],
-          totalDocuments: Number.parseInt(columns[1]),
-          exportInvoicedValue: Number.parseFloat(columns[2]),
-          taxableOperationBase: Number.parseFloat(columns[3]),
-          taxableBaseDiscount: Number.parseFloat(columns[4]),
-          totalIGV: Number.parseFloat(columns[5]),
-          igvDiscount: Number.parseFloat(columns[6]),
-          exemptOperationTotal: Number.parseFloat(columns[7]),
-          unaffectedOperationTotal: Number.parseFloat(columns[8]),
-          exciseTaxISC: Number.parseFloat(columns[9]),
-          riceTaxableBase: Number.parseFloat(columns[10]),
-          riceSalesTax: Number.parseFloat(columns[11]),
-          environmentalTaxICBPER: Number.parseFloat(columns[12]),
-          otherTaxesOrCharges: Number.parseFloat(columns[13]),
-          totalAmount: Number.parseFloat(columns[14]),
+          totalDocuments: safeParseInt(columns[1]),
+          exportInvoicedValue: safeParseFloat(columns[2]),
+          taxableOperationBase: safeParseFloat(columns[3]),
+          taxableBaseDiscount: safeParseFloat(columns[4]),
+          totalIGV: safeParseFloat(columns[5]),
+          igvDiscount: safeParseFloat(columns[6]),
+          exemptOperationTotal: safeParseFloat(columns[7]),
+          unaffectedOperationTotal: safeParseFloat(columns[8]),
+          exciseTaxISC: safeParseFloat(columns[9]),
+          riceTaxableBase: safeParseFloat(columns[10]),
+          riceSalesTax: safeParseFloat(columns[11]),
+          environmentalTaxICBPER: safeParseFloat(columns[12]),
+          otherTaxesOrCharges: safeParseFloat(columns[13]),
+          totalAmount: safeParseFloat(columns[14]),
         });
       }
 
@@ -197,18 +197,18 @@ namespace ProposalsAPI {
 
       results.push({
         documentType: columns[0],
-        totalDocuments: Number.parseInt(columns[1]),
-        taxableBaseDG: Number.parseFloat(columns[2]),
-        igvIPMDG: Number.parseFloat(columns[3]),
-        taxableBaseDGNG: Number.parseFloat(columns[4]),
-        igvIPMDGNG: Number.parseFloat(columns[5]),
-        taxableBaseDNG: Number.parseFloat(columns[6]),
-        igvIPMDNG: Number.parseFloat(columns[7]),
-        nonTaxableValue: Number.parseFloat(columns[8]),
-        exciseTax: Number.parseFloat(columns[9]),
-        environmentalTax: Number.parseFloat(columns[10]),
-        otherTaxesOrCharges: Number.parseFloat(columns[11]),
-        totalAmount: Number.parseFloat(columns[12]),
+        totalDocuments: safeParseInt(columns[1]),
+        taxableBaseDG: safeParseFloat(columns[2]),
+        igvIPMDG: safeParseFloat(columns[3]),
+        taxableBaseDGNG: safeParseFloat(columns[4]),
+        igvIPMDGNG: safeParseFloat(columns[5]),
+        taxableBaseDNG: safeParseFloat(columns[6]),
+        igvIPMDNG: safeParseFloat(columns[7]),
+        nonTaxableValue: safeParseFloat(columns[8]),
+        exciseTax: safeParseFloat(columns[9]),
+        environmentalTax: safeParseFloat(columns[10]),
+        otherTaxesOrCharges: safeParseFloat(columns[11]),
+        totalAmount: safeParseFloat(columns[12]),
       });
     }
 
@@ -595,21 +595,21 @@ namespace ProposalsAPI {
         identity_document_type: columns[10] as Types.EntityDocumentTypeCode,
         identity_document_number: columns[11],
         client_name: columns[12],
-        export_invoiced_value: Number.parseFloat(columns[13]),
-        taxable_base: Number.parseFloat(columns[14]),
-        taxable_base_discount: Number.parseFloat(columns[15]),
-        igv: Number.parseFloat(columns[16]),
-        igv_discount: Number.parseFloat(columns[17]),
-        exempted_amount: Number.parseFloat(columns[18]),
-        unaffected_amount: Number.parseFloat(columns[19]),
-        isc: Number.parseFloat(columns[20]),
-        ivap_taxable_base: Number.parseFloat(columns[21]),
-        ivap: Number.parseFloat(columns[22]),
-        icbper: Number.parseFloat(columns[23]),
-        other_taxes: Number.parseFloat(columns[24]),
-        total_amount: Number.parseFloat(columns[25]),
+        export_invoiced_value: safeParseFloat(columns[13]),
+        taxable_base: safeParseFloat(columns[14]),
+        taxable_base_discount: safeParseFloat(columns[15]),
+        igv: safeParseFloat(columns[16]),
+        igv_discount: safeParseFloat(columns[17]),
+        exempted_amount: safeParseFloat(columns[18]),
+        unaffected_amount: safeParseFloat(columns[19]),
+        isc: safeParseFloat(columns[20]),
+        ivap_taxable_base: safeParseFloat(columns[21]),
+        ivap: safeParseFloat(columns[22]),
+        icbper: safeParseFloat(columns[23]),
+        other_taxes: safeParseFloat(columns[24]),
+        total_amount: safeParseFloat(columns[25]),
         currency: columns[26] as Types.KnownCurrenciesAndMore,
-        exchange_rate: Number.parseFloat(columns[27]),
+        exchange_rate: safeParseFloat(columns[27]),
         mod_document:
           columns[28] && columns[29] && columns[30] && columns[31]
             ? {
@@ -619,10 +619,10 @@ namespace ProposalsAPI {
                 number: columns[31],
               }
             : null,
-        note_type: columns[33] ?? null,
+        note_type: columns[33] ? (columns[33] as Types.CreditNoteTypeCode | Types.DebitNoteTypeCode) : null,
         invoice_status: columns[34] as Types.InvoiceStatusCode,
-        fob_value: Number.parseFloat(columns[35]),
-        free_operations_value: Number.parseFloat(columns[36]),
+        fob_value: safeParseFloat(columns[35]),
+        free_operations_value: safeParseFloat(columns[36]),
         operation_type: columns[37] as Types.SaleTypeCode,
         customs_declaration: columns[38] ?? null,
       });
@@ -669,19 +669,19 @@ namespace ProposalsAPI {
         identity_document_type: columns[11] as Types.EntityDocumentTypeCode,
         identity_document_number: columns[12],
         client_name: columns[13],
-        taxable_base_dg: Number.parseFloat(columns[14]),
-        igv_dg: Number.parseFloat(columns[15]),
-        taxable_base_dgng: Number.parseFloat(columns[16]),
-        igv_dgng: Number.parseFloat(columns[17]),
-        taxable_base_dng: Number.parseFloat(columns[18]),
-        igv_dng: Number.parseFloat(columns[19]),
-        acquisition_value_ng: Number.parseFloat(columns[20]),
-        isc: Number.parseFloat(columns[21]),
-        icbper: Number.parseFloat(columns[22]),
-        other_taxes: Number.parseFloat(columns[23]),
-        total_amount: Number.parseFloat(columns[24]),
+        taxable_base_dg: safeParseFloat(columns[14]),
+        igv_dg: safeParseFloat(columns[15]),
+        taxable_base_dgng: safeParseFloat(columns[16]),
+        igv_dgng: safeParseFloat(columns[17]),
+        taxable_base_dng: safeParseFloat(columns[18]),
+        igv_dng: safeParseFloat(columns[19]),
+        acquisition_value_ng: safeParseFloat(columns[20]),
+        isc: safeParseFloat(columns[21]),
+        icbper: safeParseFloat(columns[22]),
+        other_taxes: safeParseFloat(columns[23]),
+        total_amount: safeParseFloat(columns[24]),
         currency: columns[25] as Types.KnownCurrenciesAndMore,
-        exchange_rate: Number.parseFloat(columns[26]),
+        exchange_rate: safeParseFloat(columns[26]),
         mod_document:
           columns[27] && columns[28] && columns[29] && columns[31]
             ? {
@@ -691,10 +691,10 @@ namespace ProposalsAPI {
                 number: columns[31],
               }
             : null,
-        imb: Number.parseFloat(columns[35]),
+        imb: safeParseFloat(columns[35]),
         origin_indicator: columns[36] ?? null,
-        detraction: columns[37] ? Number.parseFloat(columns[37]) : null,
-        note_type: columns[38] ?? null,
+        detraction: columns[37] ? safeParseFloat(columns[37]) : null,
+        note_type: columns[38] ? (columns[38] as Types.CreditNoteTypeCode | Types.DebitNoteTypeCode) : null,
         invoice_status: columns[39] as Types.InvoiceStatusCode,
         incal: columns[40] ?? null,
       });
@@ -747,6 +747,40 @@ namespace ProposalsAPI {
 
     return Result.notok("could_not_retrieve_csv");
   };
+
+  /**
+   * @description Safe parsing for decimal numbers from CSV strings
+   * @param value The string value to parse
+   * @param defaultValue Default value if parsing fails (default: 0)
+   * @returns Parsed number or default value
+   */
+  const safeParseFloat = (value: string | undefined | null, defaultValue: number = 0): number => {
+    if (!value || value.trim() === '' || value.trim() === '-') {
+      return defaultValue;
+    }
+    
+    const cleaned = value.trim().replace(/,/g, '');
+    const parsed = Number.parseFloat(cleaned);
+    
+    return Number.isNaN(parsed) ? defaultValue : parsed;
+  };
+
+  /**
+   * @description Safe parsing for integer numbers from CSV strings
+   * @param value The string value to parse
+   * @param defaultValue Default value if parsing fails (default: 0)
+   * @returns Parsed integer or default value
+   */
+  const safeParseInt = (value: string | undefined | null, defaultValue: number = 0): number => {
+    if (!value || value.trim() === '' || value.trim() === '-') {
+      return defaultValue;
+    }
+    
+    const cleaned = value.trim().replace(/,/g, '');
+    const parsed = Number.parseInt(cleaned, 10);
+    
+    return Number.isNaN(parsed) ? defaultValue : parsed;
+  };
 }
 
 export namespace Proposals {
@@ -776,5 +810,7 @@ export namespace Proposals {
     EntityDocumentTypeCode,
     SaleTypeCode,
     BookCode,
+    CreditNoteTypeCode,
+    DebitNoteTypeCode,
   } = Types;
 }

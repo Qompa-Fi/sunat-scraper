@@ -389,7 +389,7 @@ export interface PurchaseRecord {
   /**
    * @description Original: "Tipo de Nota". Index: 38. - Type of Credit Note or Debit Note. According to catalog No. 09 and 10 of Annex 8 of the Superintendency Resolution 097-2012/SUNAT and amending regulations. Null if missing.
    */
-  note_type: string | null; // Original: "Tipo de Nota" (Index: 38) - Type of note, null if missing.
+  note_type: CreditNoteTypeCode | DebitNoteTypeCode | null;
   /**
    * @description Original: "Est. Comp.". Index: 39. - Invoice status.
    */
@@ -586,7 +586,7 @@ export interface SalesRecord {
   /**
    * @description Original: "Tipo de Nota". - Note type, null if not applicable.
    */
-  note_type: string | null;
+  note_type: CreditNoteTypeCode | DebitNoteTypeCode | null;
   /**
    * @description Original: "Est. Comp". - Document status using InvoiceStatusCode enum.
    */
@@ -612,4 +612,70 @@ export interface SalesRecord {
 export enum BookCode {
   Purchases = "080000",
   SalesAndRevenue = "140000",
+}
+
+/**
+ * @description Códigos de tipos de nota de crédito según Catálogo No. 09 de SUNAT
+ * (Resolución de Superintendencia N° 097-2012/SUNAT y modificatorias).
+ */
+export enum CreditNoteTypeCode {
+  /**
+   * @description Anulación de la operación.
+   */
+  OperationCancellation = "01",
+  /**
+   * @description Anulación por error en el RUC.
+   */
+  RUCErrorCancellation = "02",
+  /**
+   * @description Corrección por error en la descripción.
+   */
+  DescriptionErrorCorrection = "03",
+  /**
+   * @description Descuento global.
+   */
+  GlobalDiscount = "04",
+  /**
+   * @description Descuento por ítem.
+   */
+  ItemDiscount = "05",
+  /**
+   * @description Devolución total.
+   */
+  TotalReturn = "06",
+  /**
+   * @description Devolución por ítem.
+   */
+  ItemReturn = "07",
+  /**
+   * @description Bonificación.
+   */
+  Bonus = "08",
+  /**
+   * @description Disminución en el valor.
+   */
+  ValueDecrease = "09",
+  /**
+   * @description Otros conceptos.
+   */
+  OtherConcepts = "10",
+}
+
+/**
+ * @description Códigos de tipos de nota de débito según Catálogo No. 10 de SUNAT
+ * (Resolución de Superintendencia N° 097-2012/SUNAT y modificatorias).
+ */
+export enum DebitNoteTypeCode {
+  /**
+   * @description Intereses por mora.
+   */
+  LateInterest = "01",
+  /**
+   * @description Aumento en el valor.
+   */
+  ValueIncrease = "02",
+  /**
+   * @description Penalidades/otros conceptos.
+   */
+  PenaltiesAndOtherConcepts = "03",
 }
