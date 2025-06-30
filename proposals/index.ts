@@ -619,7 +619,7 @@ namespace ProposalsAPI {
                 number: columns[31],
               }
             : null,
-        note_type: columns[33] ? (columns[33] as Types.CreditNoteTypeCode | Types.DebitNoteTypeCode) : null,
+        note_type: columns[33] ? columns[33] : null,
         invoice_status: columns[34] as Types.InvoiceStatusCode,
         fob_value: safeParseFloat(columns[35]),
         free_operations_value: safeParseFloat(columns[36]),
@@ -694,7 +694,7 @@ namespace ProposalsAPI {
         imb: safeParseFloat(columns[35]),
         origin_indicator: columns[36] ?? null,
         detraction: columns[37] ? safeParseFloat(columns[37]) : null,
-        note_type: columns[38] ? (columns[38] as Types.CreditNoteTypeCode | Types.DebitNoteTypeCode) : null,
+        note_type: columns[38] ? columns[38] : null,
         invoice_status: columns[39] as Types.InvoiceStatusCode,
         incal: columns[40] ?? null,
       });
@@ -809,8 +809,6 @@ export namespace Proposals {
     InvoiceStatusCode,
     EntityDocumentTypeCode,
     SaleTypeCode,
-    BookCode,
-    CreditNoteTypeCode,
-    DebitNoteTypeCode,
+    BookCode
   } = Types;
 }
