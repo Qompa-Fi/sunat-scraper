@@ -389,7 +389,7 @@ export interface PurchaseRecord {
   /**
    * @description Original: "Tipo de Nota". Index: 38. - Type of Credit Note or Debit Note. According to catalog No. 09 and 10 of Annex 8 of the Superintendency Resolution 097-2012/SUNAT and amending regulations. Null if missing.
    */
-  note_type: string | null; // Original: "Tipo de Nota" (Index: 38) - Type of note, null if missing.
+  note_type: string | null;
   /**
    * @description Original: "Est. Comp.". Index: 39. - Invoice status.
    */
