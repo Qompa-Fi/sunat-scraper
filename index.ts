@@ -14,6 +14,10 @@ const getOauth2EndpointMetadata = (endpoint: string): [string, string] => {
   return [trimmedEndpoint, state];
 };
 
+const DEFAULT_UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+  "(KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36";
+
 export async function verifySolCredentials(
   ruc: string,
   solUsername: string,
@@ -32,6 +36,7 @@ export async function verifySolCredentials(
       Referer: "https://e-menu.sunat.gob.pe/",
       DNT: "1",
       "Content-Type": "application/x-www-form-urlencoded",
+      'User-Agent': DEFAULT_UA,
     },
     body: new URLSearchParams({
       tipo: "2",
