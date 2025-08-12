@@ -24,6 +24,7 @@ namespace ProposalsAPI {
    * @description Retrieve the official records from the SUNAT Platform. The response items are an array in the following format: YYYYMM. Some examples are: 202405, 202201, 202112, etc.
    */
   export const getTaxComplianceVerificationPeriods = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     bookCode: Types.BookCode,
   ): Promise<Result<string[], "unauthorized" | "bad_response">> => {
@@ -38,6 +39,7 @@ namespace ProposalsAPI {
       referrer: "https://e-factura.sunat.gob.pe/",
       method: "GET",
       mode: "cors",
+      signal,
     });
 
     if (!response.ok) {
@@ -128,6 +130,7 @@ namespace ProposalsAPI {
   export const getTaxComplianceVerificationSummary = async <
     B extends Types.BookCode,
   >(
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: GetTaxComplianceVerificationSummaryInputs<B>,
   ): Promise<
@@ -144,6 +147,7 @@ namespace ProposalsAPI {
       referrer: "https://e-factura.sunat.gob.pe/",
       method: "GET",
       mode: "cors",
+      signal,
     });
 
     if (!response.ok) {
@@ -327,10 +331,10 @@ namespace ProposalsAPI {
   }
 
   const rawQueryProcesses = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: QueryProcessesInputs,
   ): Promise<Result<RawQueryProcessesData, "bad_response">> => {
-    console.log("inputs", inputs);
     const params = new URLSearchParams({
       perIni: inputs.start_period,
       perFin: inputs.end_period ? inputs.end_period : inputs.start_period,
@@ -349,12 +353,13 @@ namespace ProposalsAPI {
         ...genericHeaders,
         authorization: `Bearer ${sunatToken}`,
       },
+      signal,
       body: null,
       method: "GET",
     });
 
     if (!response.ok) {
-      const body = await response.json();
+      const body = await response.text();
       console.warn(
         { body, url: response.url },
         "SunatAPI.queryProcesses.error",
@@ -369,10 +374,11 @@ namespace ProposalsAPI {
    * @description Returns the paginated processes from the SUNAT API. You can also use `SunatAPI.queryProcesses.raw`.
    */
   export const queryProcesses = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: QueryProcessesInputs,
   ): Promise<Result<QueryProcessesData, "bad_response">> => {
-    const result = await rawQueryProcesses(sunatToken, inputs);
+    const result = await rawQueryProcesses(signal, sunatToken, inputs);
     if (!result.ok) return result;
 
     const data = result.value;
@@ -437,6 +443,7 @@ namespace ProposalsAPI {
    * @description Returns the ticket number so you can query the process in background while is being dispatched by the SUNAT platform.
    */
   export const requestSalesAndRevenueManagementProposal = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: RequestSalesAndRevenueManagementProposalInputs,
   ): Promise<
@@ -467,6 +474,7 @@ namespace ProposalsAPI {
         ...genericHeaders,
         authorization: `Bearer ${sunatToken}`,
       },
+      signal,
       body: null,
       method: "GET",
     });
@@ -502,6 +510,7 @@ namespace ProposalsAPI {
    * @description Returns the ticket number so you can query the process in background while is being dispatched by the SUNAT platform.
    */
   export const requestPurchasingManagementProposal = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: RequestPurchasingManagementProposalInputs,
   ): Promise<
@@ -524,6 +533,7 @@ namespace ProposalsAPI {
         ...genericHeaders,
         Authorization: `Bearer ${sunatToken}`,
       },
+      signal,
       body: null,
       method: "GET",
     });
@@ -559,12 +569,14 @@ namespace ProposalsAPI {
   }
 
   export const getProcessedSalesAndRevenuesProposal = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: GetProcessedProposalInputs,
   ): Promise<
     Result<Types.SalesRecord[], "bad_response" | "could_not_retrieve_csv">
   > => {
     const result = await getProcessedIGVProposal(
+      signal,
       sunatToken,
       Types.BookCode.SalesAndRevenue,
       inputs,
@@ -632,12 +644,14 @@ namespace ProposalsAPI {
   };
 
   export const getProcessedIncomesProposal = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     inputs: GetProcessedProposalInputs,
   ): Promise<
     Result<Types.PurchaseRecord[], "bad_response" | "could_not_retrieve_csv">
   > => {
     const result = await getProcessedIGVProposal(
+      signal,
       sunatToken,
       Types.BookCode.Purchases,
       inputs,
@@ -707,6 +721,7 @@ namespace ProposalsAPI {
    * @description Returns the CSV data for the provided IGV proposal.
    */
   const getProcessedIGVProposal = async (
+    signal: AbortSignal | undefined,
     sunatToken: string,
     bookCode: Types.BookCode,
     inputs: GetProcessedProposalInputs,
@@ -728,6 +743,7 @@ namespace ProposalsAPI {
         ...genericHeaders,
         Authorization: `Bearer ${sunatToken}`,
       },
+      signal,
       body: null,
       method: "GET",
     });
